@@ -7,7 +7,7 @@
 .header{
   
   height: 50px;
-  box-shadow: 4px 2px 1px 1px #d0d0d0;
+  box-shadow: 1px 1px 1px 1px #d0d0d0;
 }
 
 .header>button{
@@ -20,10 +20,49 @@
   margin-top:50px;
   position: fixed;
   width:400px;
-  box-shadow: 4px 2px 1px 1px #d0d0d0;
+  box-shadow: 1px 1px 1px 1px #d0d0d0;
   min-height: 100vw;
+}
+.left-pane>div{
+  padding-left:40px;
 }
 
 .right-pane{
   margin-left: 400px;
+}
+.list-header{
+  display: inline;;
+}
+.list-header>button{
+  float: right;
+  margin-right: 10px;
+}
+.user-list-row{
+  margin-left:20px;
+  padding:10px 5px;
+  border:1px solid #d0d0d0;
+  margin-top: 5px;
+  border-left: transparent;
+}
+.modal-container{
+  left:0;
+  right: 0;
+  top:0;
+  bottom: 0;
+  position: fixed;
+  background: #d0d0d0;
+  opacity: 0.7;
+}
+.modal{
+  margin: 150px auto;
+  width: 400px;
+  background: white;
+  box-shadow: 1px 1px 20px 0px black;
+}
+.modal-header{
+  text-align: right;
+}
+
+.user-details-view{
+  padding:50px;
 }
