@@ -2,67 +2,98 @@ import * as React from 'react';
 import { connect } from 'react-redux'
 import store from './users.store'
 class UserList extends React.Component<any, any> {
-    idx: any[] = [];
     constructor(props: any) {
         super(props);
-        let userSelectSate = [];
-        for(let i=0; i<this.props.users.length;i++){
-            userSelectSate[i] = false;
-        }
         this.state = {
-            
+            selectedUsers: []
         }
     }
-    public setSelectedUser(user: any) {
+    public setSelectedUser(event: any, user: any) {
         this.props.onUserSelect(user);
     }
-    public onChange(event: any, user: any) {
-        if (event.target.checked) {
-            this.idx.push(user.id);
-        } else {
-            const indexOf = this.idx.findIndex((id) => id === user.id)
-            if (indexOf != -1) {
-                this.idx.splice(indexOf, 1);
+    public noEvent(event: any) {
+        event.stopPropagation();
+    }
+    public selectOne(event:any, user:any){
+        if(event.target.checked){
+            this.setState({
+                selectedUsers: [...this.state.selectedUsers,user]
+            })
+        }else{
+            const copied = [...this.state.selectedUsers];
+            const findIdx = copied.findIndex((u:any)=>{
+                return u.id === user.id
+            })
+            if(findIdx !==-1){
+                copied.splice(findIdx , 1);
+                this.setState({
+                    selectedUsers: [...copied]
+                })  
             }
         }
     }
-    public deleletUsers(event: any) {
-        event.preventDefault();
-        store.dispatch({ type: 'DELETE_USERS', ids: this.idx })
-    }
-    selectAll(event: any) {
-        this.idx = [];
-        if (event.target.checked) {
-            this.props.users.forEach((user: any) => {
-                this.idx.push(user.id);
-            });
-        }
 
+    public deleletUsers(event: any) {
+        store.dispatch({ type: 'DELETE_USERS', users: this.state.selectedUsers })
+        this.setState({
+            selectedUsers:[]
+        })
+    }
+    selectAllUser(event: any) {
+        if (event.target.checked) {
+            this.setState({
+                selectedUsers: [...this.props.users]
+            })
+        } else {
+            this.setState({
+                selectedUsers: []
+            })
+        }
     }
     isSelected(user: any) {
-        console.log(user);
-        return this.idx.find((id) => id === user.id);
+        const checked = this.state.selectedUsers.some((selectedUser: any) => selectedUser.id === user.id);
+        return checked;
+    }
+    isAllSelected(){
+        let allSelected = true;
+        if(this.props.users.length === 0){
+            return false;
+        }
+        for (let i = 0; i < this.props.users.length; i++) {
+            if(!this.isSelected(this.props.users[i])){
+                allSelected = false;
+                break;
+            }
+        }
+        return allSelected;
     }
     public render() {
         return (
             <div>
-                <div className="list-header">
-                    <input type="checkbox" onClick={(e) => this.selectAll(e)} />
-                    <button onClick={(e) => this.deleletUsers(e)}>Del</button>
+                <div className="app-list-header row">
+                    <div className="col-sm-4" onClick={e => { this.noEvent(e) }}>
+                        <input type="checkbox" checked = {this.isAllSelected()} onChange = {(e)=>this.selectAllUser(e)}/>
+                    </div>
+                    <div className=" col-sm-8 text-right">
+                        <button className="btn btn-sm btn-danger" onClick={(e) => this.deleletUsers(e)}>Delete</button>
+                    </div>
                 </div>
                 <div >
-                    {this.props.users.map((user: any) => this.renderUserListRowItem(user))}
+                    {this.props.users.map((user: any, index: any) => this.renderUserListRowItem(user, index))}
                 </div>
 
             </div>
         );
     }
 
-    public renderUserListRowItem(user: any) {
-        return (<div key={user.id} className="user-list-row" onClick={() => this.setSelectedUser(user)}>
-            <input type="checkbox" checked={this.isSelected(user)} onClick={(e) => this.onChange(e, user)} />
-            <span >{user.name}</span>
-        </div>
+    public renderUserListRowItem(user: any, index: any) {
+        return (
+            <div key={user.id} className="user-list-row" onClick={(event) => this.setSelectedUser(event, user)}>
+                <div onClick={(e) => this.noEvent(e)}>
+                    <input type="checkbox" checked = {this.isSelected(user)} onChange={(event)=>{this.selectOne(event,user)}}/>
+                </div>
+                <span>{user.name}</span>
+            </div>
         )
     }
 }

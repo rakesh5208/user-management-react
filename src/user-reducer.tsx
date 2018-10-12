@@ -1,5 +1,5 @@
 
-const userReducer = (state:any, action: any) => {
+const userReducer = (state: any, action: any) => {
     switch (action.type) {
         case 'ADD_USER':
             return [...state, {
@@ -10,14 +10,14 @@ const userReducer = (state:any, action: any) => {
 
         case 'DELETE_USERS':
             const copied = [...state];
-            action.ids.forEach((id:any) => {
-                const findIdx = copied.findIndex((user: any) => {
-                    return user.id === id;
+            action.users.forEach((user: any) => {
+                const findIdx = copied.findIndex((cu: any) => {
+                    return user.id === cu.id;
                 })
                 if (findIdx !== -1) {
-                    copied.splice(findIdx,1)
+                    copied.splice(findIdx, 1)
                 }
-            });
+            })
             return copied;
         default:
             return [...state];

@@ -18,11 +18,11 @@ class App extends React.Component<any,any> {
   }
   public render() {
     return (
-      <div className="container">
-         <div className="left-pane">
+      <div className="app-container">
+         <div className="app-left-pane">
             <UserList onUserSelect={this.setSelectedUser.bind(this)}/>
           </div>
-          <div className="right-pane">
+          <div className="app-right-pane">
             <UserDetails user={this.state.selectedUser}/>
           </div>
       </div>
